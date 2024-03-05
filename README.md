@@ -19,3 +19,5 @@ The project includes three windows scripts that automate the building, running a
 
 ## Default Ports
 The default ports Docker is using are 3000 for React and 3001 for Flask
+
+## TEST
