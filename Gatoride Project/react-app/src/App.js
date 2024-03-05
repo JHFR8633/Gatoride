@@ -15,7 +15,7 @@ function App() {
     return (
         <div>
            {(typeof data.members === 'undefined') ? (
-                <p>Something Went Wrong...</p>
+                <p>Welcome to Gatoride! This project is made by the Gatoride Team!</p>
            ) : (
                 data.members.map((member, i) => (
                     <p key={i}>{member}</p>
