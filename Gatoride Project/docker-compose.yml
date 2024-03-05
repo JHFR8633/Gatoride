@@ -6,7 +6,7 @@ services:
   api:
     build: ./flask
     ports:
-      - 3001:3000
+      - 5000:5000
   web:
     build: ./react-app
     ports:

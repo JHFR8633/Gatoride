@@ -1,28 +1,31 @@
 import React, {useState, useEffect} from 'react'
 
 function App() {
-
-    const [data, setData] = useState([{}])
-
-    useEffect(() => {
-        fetch("/members")
-            .then(res => res.json())
-            .then(data => {
-                setData(data)
-                console.log(data)})
-    }, [])
+    const handleButtonClick = () => {
+        // Send a request to the Flask backend
+        fetch('/api/button-click', {
+            method: 'POST',
+            // You can include any data you want to send here
+            body: JSON.stringify({ action: 'button-clicked' }),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Handle the response from the backend (if needed)
+            console.log('Response from backend:', data);
+        })
+        .catch(error => {
+            console.error('Error sending data to backend:', error);
+        });
+    };
 
     return (
-        <div>
-           {(typeof data.members === 'undefined') ? (
-                <p>Welcome to Gatoride! This project is made by the Gatoride Team!</p>
-           ) : (
-                data.members.map((member, i) => (
-                    <p key={i}>{member}</p>
-                ))
-           )}
+        <div className="App">
+            <p>Test!</p>
+            <button onClick={handleButtonClick}>Click Me!</button>
         </div>
-    )
+    );
 }
-
 export default App
