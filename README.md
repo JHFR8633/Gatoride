@@ -12,7 +12,9 @@ After installing it will ask the system to restart, after that its just a matter
 The project includes three windows scripts that automate the building, running and stopping processes. These can be used to control docker and run the project
 
 #Build - After every change done to the code
+
 #Run - To start the web app and server
+
 #Stop - To stop the running services
 
 ## Default Ports
