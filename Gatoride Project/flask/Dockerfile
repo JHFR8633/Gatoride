@@ -15,4 +15,4 @@ COPY . /app
 EXPOSE 3000
 
 # Run the flask program
-CMD ["flask", "--app", "index", "run", "--debug", "--port=3000", "--host=0.0.0.0"]
+CMD ["flask", "--app", "index", "run", "--debug", "--port=5000", "--host=0.0.0.0"]
