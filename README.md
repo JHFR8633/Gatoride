@@ -1,16 +1,21 @@
-# Team_74_Project
-This is our group project for Intro to Software engineering
+## Team 74 Gatoride
+Software engineering project that aims to create a car rental web application
 
-This was a test to check pul requests
+## Requirements to run
+Docker and docker-compose are the only requirement, Docker for windows already comes with docker-compose. 
+Dowload the installer here: https://www.docker.com/products/docker-desktop/
 
-Download Node.js here: https://nodejs.org/en/download
-and choose windows installer if you are running windows.
+## How to setup docker
+After installing it will ask the system to restart, after that its just a matter of logging in and opening docker before starting the project
 
-This allows you to use npm commands to run this test code that connects React.js and flask. Additionally, you will need
-to install the packages included in app.py, but that should be simple to do. 
+## How to run the project with Docker
+The project includes three windows scripts that automate the building, running and stopping processes. These can be used to control docker and run the project
 
-In order to test this properly, you will first need to run app.py, which starts the backend server that contains a json that react will read. Then, to run the front end make sure your directory is in the frontend folder first, then run "npm start" in your command line.
+#Build - After every change done to the code
 
-A very basic white page should display on localhost:3000 that says:
-Name: Gatoride
-About: This is a Intro to SWE project!
+#Run - To start the web app and server
+
+#Stop - To stop the running services
+
+## Default Ports
+The default ports Docker is using are 3000 for React and 3001 for Flask
