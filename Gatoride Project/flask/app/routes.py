@@ -1,10 +1,8 @@
 from flask import jsonify, request
 from .models import Person
+from app.dummy_data import add_dummy_data, add_data
 
-global haveData
-haveData=False
-global myData
-myData={}
+
 def configure_routes(app):
     @app.route('/members')
     def run():
@@ -13,10 +11,7 @@ def configure_routes(app):
     
     @app.route('/sendJson', methods=['POST'])
     def getData():
+        #add_dummy_data()
         myData=request.get_json()
-        name=myData['name']
-        haveData=True
+        add_data(myData)
         return jsonify(myData)
-    
-def retrieve_data():
-    return myData
