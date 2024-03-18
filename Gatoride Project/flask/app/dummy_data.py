@@ -1,4 +1,5 @@
 from .models import db, Person
+from app.routes import retrieve_data
 
 def add_dummy_data():
     # Add dummy data to the database
@@ -16,3 +17,8 @@ def add_dummy_data():
     db.session.commit()
 
     print("Dummy data added successfully!")
+def add_data():
+    my_dic=retrieve_data()
+    print(my_dic)
+    new_person = Person(name=my_dic["name"], age=my_dic["age"], height=my_dic["height"])
+    db.session.add(new_person)

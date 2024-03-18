@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask , jsonify
 from .models import db
 from .routes import configure_routes
 
@@ -10,4 +10,12 @@ def create_app():
     with app.app_context():
         db.create_all()
         configure_routes(app)
+    return_status(True)
     return app
+
+def return_status(status):
+    if status:
+        return "successful"
+    else:
+        return "unsuccessful"
+    
