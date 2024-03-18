@@ -1,6 +1,6 @@
 from flask import jsonify, request
 from .models import Person
-from app.dummy_data import add_dummy_data, add_data
+from .models import add_dummy_data, add_data
 
 
 def configure_routes(app):
