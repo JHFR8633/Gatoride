@@ -1,6 +1,7 @@
 from flask import jsonify, request
+from flask_sqlalchemy import SQLAlchemy
 from .models import Person
-from .models import add_dummy_data, add_data
+from .models import add_data
 
 
 def configure_routes(app):
@@ -13,4 +14,5 @@ def configure_routes(app):
     def getData():
         myData=request.get_json()
         add_data(myData)
+        members = [person.name for person in Person.query.all()]
         return "data recieved"
