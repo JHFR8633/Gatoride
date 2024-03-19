@@ -11,7 +11,6 @@ def configure_routes(app):
     
     @app.route('/sendJson', methods=['POST'])
     def getData():
-        #add_dummy_data()
         myData=request.get_json()
         add_data(myData)
-        return jsonify(myData)
+        return "data recieved"
