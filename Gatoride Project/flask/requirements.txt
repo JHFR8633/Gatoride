@@ -1,1 +1,3 @@
 flask
+sqlalchemy
+Flask-SQLAlchemy
