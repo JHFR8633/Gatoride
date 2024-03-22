@@ -10,19 +10,26 @@ class Car(db.Model):
     def __repr__(self):
         return '<Car %r %r>' % (self.make, self.model)
 
-class Person(db.Model):
+class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80))
     username = db.Column(db.String(80))
     password = db.Column(db.String(80))
 
     def __repr__(self):
-        return '<Person %r>' % self.name
+        return '<User %r>' % self.name
     
 def add_data(my_dic):
-    new_person = Person(name=my_dic["name"], username=my_dic["username"], password=my_dic["password"])
-    db.session.add(new_person)
+    new_user = User(name=my_dic["name"], username=my_dic["username"], password=my_dic["password"])
+    db.session.add(new_user)
     db.session.commit()
+
+# return password and username of a user
+def gethashed_password_username(user_name):
+    user = User.query.filter_by(name=user_name).first() #.first() return the first occurance of the data, can remove after implementing dupe check
+    if user is None:
+        return ["invalid user name"]
+    return [user.username,user.password]
 
 
 def create_dummy_cars():
