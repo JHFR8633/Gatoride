@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  frontend:
+    container_name: frontend
+
+    ports:
+      - "3000:3000"
+      - 49153:49153
+
+    build:
+      context: /frontend
+      dockerfile: Dockerfile
+
+    volumes:
+      - ./frontend/src:/app/src
+      - /app/node_modules
+      - /app/.next
