@@ -36,4 +36,4 @@ frontend/*.tsbuildinfo
 frontend/next-env.d.ts
 
 # tailwind
-frontend/src/tailwind
+frontend/src/tailwind/output.css

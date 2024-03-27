@@ -1,18 +1,49 @@
 version: '3.8'
 
+name: gatoride
+
 services:
-  frontend:
-    container_name: frontend
+  api:
+    container_name: api
 
     ports:
       - "3000:3000"
-      - 49153:49153
 
-    build:
-      context: /frontend
+    build: 
+      context: /api
       dockerfile: Dockerfile
 
     volumes:
-      - ./frontend/src:/app/src
-      - /app/node_modules
-      - /app/.next
+      - ./api/app:/api/app
+
+  web:
+    container_name: web
+
+    ports:
+      - "5000:3000"
+      - "49153:49153"
+
+    build:
+      context: /web
+      dockerfile: Dockerfile
+
+    volumes:
+      - ./web/src:/web/src
+      - ./web/public:/web/public
+      - /web/node_modules
+      - /web/.next   
+
+  img_server:
+    container_name: img_server
+
+    ports:
+      - "4000:4000"
+
+    build:
+      context: /img_server
+      dockerfile: Dockerfile
+
+    volumes:
+      - ./img_server/static:/img_server/static
+      - ./img_server/app:/img_server/app
+    
