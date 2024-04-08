@@ -2,6 +2,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
+
 class Car(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     make = db.Column(db.String(80))
@@ -15,7 +16,8 @@ class User(db.Model):
     email = db.Column(db.String(80))
     username = db.Column(db.String(80))
     password = db.Column(db.String(80))
-
+    #role = db.Column(db.String(80)) # either "admin", "employee", or "client"
+                     
     def __repr__(self):
         return '<User %r>' % self.username
     

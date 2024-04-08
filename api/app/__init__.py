@@ -3,10 +3,13 @@ from .models import db
 from .routes import configure_routes
 from .models import create_dummy_cars
 from flask_cors import CORS
+from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 
 
 def create_app():
     app = Flask(__name__) 
+    app.config['JWT_SECRET_KEY'] = 'your_jwt_secret'
+    jwt = JWTManager(app)
     CORS(app)
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///../persons.db'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False

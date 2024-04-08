@@ -3,6 +3,8 @@ from flask_sqlalchemy import SQLAlchemy
 from .models import User, Car
 from .models import add_data, get_hashed_password
 from flask_bcrypt import generate_password_hash, check_password_hash
+from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
+
 
 def configure_routes(app):
     @app.route('/members')
@@ -21,6 +23,7 @@ def configure_routes(app):
             new_user['email'] = data["email"]
             new_user['username'] = data["username"]
             new_user['password'] = generate_password_hash(data["password"])
+            new_user['role'] = data["client"] # creates a client account by default
 
             add_data(new_user)
 
@@ -72,3 +75,8 @@ def configure_routes(app):
         available_cars=Car.qiery.all()
 
         return jsonify([{'id': car.id, 'make':car.make, 'model': car.model} for car in available_cars])
+    
+    @app.route('/login/protected', methods=['GET'])
+    @jwt_required()
+    def protected():
+        pass

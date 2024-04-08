@@ -3,3 +3,4 @@ sqlalchemy
 Flask-SQLAlchemy
 Flask-Bcrypt
 flask_cors
+flask_jwt_extended
