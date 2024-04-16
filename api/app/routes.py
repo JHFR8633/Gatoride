@@ -34,22 +34,16 @@ def configure_routes(app):
        
     
     #input json should be name, username and password
-    @app.route('/checkUser',methods=['POST'])
-    def check_user():
-        if not request.is_json:
-            return jsonify({"error": "Request must contain JSON data"}), 400
-        
-        data = request.json
+    @app.route('/login',methods=['POST'])
+    def login():
+        username = request.json.get('username', None)
+        password = request.json.get('password', None)
+        user = User.query.filter_by(username=username).first()
 
-        user = get_hashed_password(data["username"])
-
-        if user is None:
-            return jsonify({ "login" : False, "response" : "invalid username"})
-        else:
-            login = check_password_hash(user.password, data["password"])
-            response = "sucess" if login else "username or password incorrect"
-            return jsonify({ "login" : login , "response" : response })
-
+        if user and check_password_hash(user.password, password):
+            access_token = create_access_token(identity=username)
+            return jsonify(access_token=access_token), 200
+        return jsonify({"msg": "Invalid login credentials"}), 401
     
     @app.route('/getcars', methods=['GET'])
     def get_cars():
@@ -72,11 +66,12 @@ def configure_routes(app):
         end_date=dates["end_date"]
 
         #if(the date range matches car) return cars
-        available_cars=Car.qiery.all()
+        available_cars=Car.query.all()
 
         return jsonify([{'id': car.id, 'make':car.make, 'model': car.model} for car in available_cars])
     
     @app.route('/login/protected', methods=['GET'])
     @jwt_required()
     def protected():
-        pass
+        current_user = get_jwt_identity()
+        return jsonify(logged_in_as=current_user), 200
