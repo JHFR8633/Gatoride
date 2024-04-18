@@ -18,32 +18,47 @@ def configure_routes(app):
         if request.is_json:
             data = request.json
 
-            new_user = {}
+            try:
+                new_user = {}
+                new_user['email'] = data["email"]
+                new_user['username'] = data["username"]
+                new_user['password'] = generate_password_hash(data["password"])
+                new_user['role'] = "client" # creates a client account by default
 
-            new_user['email'] = data["email"]
-            new_user['username'] = data["username"]
-            new_user['password'] = generate_password_hash(data["password"])
-            new_user['role'] = data["client"] # creates a client account by default
+                email_exists = User.query.filter_by(email=new_user["email"]).first() is not None
+                user_exists = User.query.filter_by(username=new_user["username"]).first() is not None
 
-            add_data(new_user)
-
-            return jsonify(data)
+                if (email_exists):
+                    return jsonify({"valid" : False, "error": "This email is already registered"}), 400
+                
+                elif (user_exists):
+                    return jsonify({"valid" : False, "error": "This username is already taken"}), 400
+                    
+                else:
+                    add_data(new_user)
+                    return jsonify({"valid" : True, "error": "", "data" : data}), 200
+                
+            except:
+                return jsonify({"valid" : False, "error": "Some data is missing", "data": data}), 400
+            
         
-        else:
-            return jsonify({"error": "Request must contain JSON data"}), 400
-       
+        return jsonify({"valid" : False, "error": "Request must contain JSON data"}), 400
+
     
     #input json should be name, username and password
     @app.route('/login',methods=['POST'])
     def login():
+
+        
         username = request.json.get('username', None)
         password = request.json.get('password', None)
         user = User.query.filter_by(username=username).first()
 
         if user and check_password_hash(user.password, password):
             access_token = create_access_token(identity=username)
-            return jsonify(access_token=access_token), 200
-        return jsonify({"msg": "Invalid login credentials"}), 401
+            return jsonify({"data": {"token" : access_token}}), 200
+        
+        return jsonify({"error": "Invalid login credentials"}), 401
     
     @app.route('/getcars', methods=['GET'])
     def get_cars():
@@ -74,4 +89,14 @@ def configure_routes(app):
     @jwt_required()
     def protected():
         current_user = get_jwt_identity()
-        return jsonify(logged_in_as=current_user), 200
+        if ( current_user is None ):
+            return jsonify({ "valid" : False, "error" : "Invalid Token", "data" : None }), 401
+        
+        user_match = User.query.filter_by(username=current_user).first()
+
+        if( user_match is None):
+            return jsonify({ "valid" : False, "error" : "Invalid Token", "data" : None }), 401
+        
+        else:
+            return jsonify({ "valid" : True, "error" : "", "data" : { "username" : user_match.username, "email" : user_match.email } }), 200
+
