@@ -8,10 +8,21 @@ class Car(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     make = db.Column(db.String(80))
     model = db.Column(db.String(80))
-    reserve_date = db.Column(db.Text)
+    reservations = db.Column(db.Text)
 
     def __repr__(self):
         return '<Car %r %r>' % (self.make, self.model)
+    
+class Reservation(db.Model):
+    reservation_id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer)
+    car_id = db.Column(db.Integer)
+    start = db.Column(db.Text)
+    end = db.Column(db.Text)
+    tag = db.Column(db.Text)
+
+    def __repr__(self):
+        return '<Reservation %r %r>' % (self.reservation_id, self.user_id)
 
 
 class User(db.Model):
@@ -19,6 +30,7 @@ class User(db.Model):
     email = db.Column(db.String(80))
     username = db.Column(db.String(80))
     password = db.Column(db.String(80))
+    reservations = db.Column(db.Text)
     # role = db.Column(db.String(80)) # either "admin", "employee", or "client"
 
     def __repr__(self):
@@ -31,6 +43,33 @@ def add_data(my_dic):
     db.session.add(new_user)
     db.session.commit()
 
+def add_reservation(my_json):
+    tag = build_tag(my_json["start"], my_json["end"])
+
+    new_reservation = Reservation(
+        reservation_id = my_json["reservation_id"], user_id = my_json["user_id"], tag = tag
+        start = my_json["start"], end = my_json["end"], car_id = my_json["car_id"]
+    )
+    
+    user = User.query.filter_by(id=new_reservation.user_id).first()
+    car = Car.query.filter_by(id=new_reservation.car_id).first()
+
+
+    reservations = user.reservations.split(',')
+    reservations.append(new_reservation.reservation_id)
+    reservations.sort()
+    user.reservations = reservations.join(',')
+
+    reservations = car.reservations.split(',')
+    reservations.append(tag + new_reservation.reservation_id)
+    reservations.sort()
+    car.reservations = reservations.join(',')
+
+#take in 3 strings
+def build_tag(start, end):
+    return start[2:6] + end[2:6]
+
+def build_reservation()
 
 def update_reservation(my_Json):
     ID = my_Json["id"]
@@ -55,31 +94,6 @@ def update_reservation(my_Json):
     update_car.reserve_date = new_dates_str
     db.session.commit()
 
-
-def check_availability(my_Json):
-    start_date = my_Json["start_date"]
-    end_date = my_Json["end_date"]
-
-    start_ob = datetime.strptime(start_date, "%m/%d/%Y")
-    end_ob = datetime.strptime(end_date, "%m%d%Y")
-
-    start_epoch = int(start_ob.timestamp())
-    end_epoch = int(end_ob.timestamp())  # standard time since epoch
-
-    available_cars = []
-    for cars in Car.query.all():
-        existing_dates = cars.reserve_dates_text
-        existing_dates_list = existing_dates.split(',')
-
-        for i in range(0, len(existing_dates_list), 2):
-            if start_epoch > existing_dates_list[i] and start_epoch < existing_dates_list[i+1]:
-                pass
-            elif start_epoch < existing_dates_list[i] and end_epoch > existing_dates_list[i]:
-                pass
-            if i == len(existing_dates_list):
-                available_cars.append(cars)
-
-    return available_cars
 
 
 # return password and username of a user
@@ -117,3 +131,68 @@ def create_dummy_cars():
     db.session.commit()
 
     print("Dummy cars added to the database.")
+
+def check_availability(my_Json):
+    start_date = my_Json["start_date"]
+    end_date = my_Json["end_date"]
+
+    start_ob = datetime.strptime(start_date, "%m/%d/%Y")
+    end_ob = datetime.strptime(end_date, "%m%d%Y")
+
+    start_epoch = int(start_ob.timestamp())
+    end_epoch = int(end_ob.timestamp())  # standard time since epoch
+
+    available_cars = []
+    for cars in Car.query.all():
+        existing_dates = cars.reserve_dates_text
+        existing_dates_list = existing_dates.split(',')
+
+        for i in range(0, len(existing_dates_list), 2):
+            if start_epoch > existing_dates_list[i] and start_epoch < existing_dates_list[i+1]:
+                pass
+            elif start_epoch < existing_dates_list[i] and end_epoch > existing_dates_list[i]:
+                pass
+            if i == len(existing_dates_list):
+                available_cars.append(cars)
+
+    return available_cars
+
+#A tag is 12 digits
+def check_end_previous(tag, reservations, i):
+    end = reservations[i - 1][0:5]
+    start = tag[0:5]
+    
+    if ( start > end ) : return True
+    if ( start < end ) : return False
+    else : #EDGE case 
+        return
+
+def check_start_next(tag, reservations, i):
+    end = tag[5:9]
+    start = reservations[i][0:5]
+    
+    if( end < start ) : return True
+    if( end > start ) : return False
+    else: # ==
+        
+        return
+
+def check_availability(my_Json):
+    tag = build_tag(my_Json["start_date"], my_Json["end_date"], "0000")
+    available_cars = []
+
+    for cars in Car.query.all():
+        reservations = cars.reservations.split(',')
+        n = len(reservations)
+        i = 0
+
+        while( i < n and tag >= reservations[i] ) : i += 1
+
+        if( i == n ) : #Check only end date of previous
+            check_end_previous(tag, reservations, i)
+
+        if( i == 0 ) : #Check only start date of next
+            pass
+        
+        else : #Check Both
+            

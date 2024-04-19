@@ -97,8 +97,45 @@ def configure_routes(app):
         else:
             return jsonify({"valid": True, "error": "", "data": {"username": user_match.username, "email": user_match.email}}), 200
 
-    # incoming format start 0004-03-24 end ID
+    # incoming format start 00040324 end ID
     @app.route('/reserve', methods=['POST'])
     def reserve_car():
         reserve = request.get_json()
         update_reservation(reserve)
+
+    @app.route('/createReservation', methods=['POST'])
+    def reserve_car():
+        
+
+    @app.route('/checkReservation',methods=['POST']):
+    def check_car():
+        check =request.get_json()
+        check_availability(check)
+        pass
+
+    @app.route('/addCar', methods=['POST'])
+    def add_car():
+        if request.method == 'POST':
+            data = request.json
+        try:
+            new_car = Car(id = data['id'], make=data['make'], model=data['model'], reservations='')
+            db.session.add(new_car)
+            db.session.commit()
+            return jsonify({'message': 'Car added successfully', 'car': str(new_car)}), 201
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({'error': str(e)}), 400
+
+    return jsonify({'message': 'Invalid request method'}), 405
+
+    @app.route('/deleteCar', methods=['POST'])
+    def delete_for_car():
+        if request.method == 'POST':
+            data = request.json
+        try:
+            Car.query.filter_by(id=data['id']).delete()
+            db.session.commit()
+            return jsonify({'message': 'Car deleted successfully'}), 201
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({'error': str(e)}), 400
