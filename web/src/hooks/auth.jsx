@@ -1,75 +1,94 @@
 
-export const usePost = (setResponse, data, url) => {
-  fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
-  })
-  .then(response => {
-      if (!response.ok) {
-          return response.json().then(response => {setResponse({ valid : false, error : response.error, data : ""}); throw new Error(response.error)})
-      }
-      return response.json().then(response => {setResponse({ valid : true, error : "", data : response.data})})
-  })
-  .catch(error => {
-      console.error(error);      
-  });
+import { buildRequest, buildRequestBody, useFetch } from "./request"
+
+export const singUpRequest = ( data ) => {
+
+    const headers = { 
+        'Content-Type' : 'application/json' 
+    }
+
+    const request = buildRequestBody( 'POST', headers, data )
+
+    return useFetch( request, "http://localhost:3000/users/create" )
 }
 
-export const usePostAuthorized = (setResponse, data, url, token) => {
-  fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
-      },
-      body: JSON.stringify(data)
-  })
-  .then(response => {
-      if (!response.ok) {
-          return response.json().then(response => {setResponse({ valid : false, error : response.error, data : ""}); throw new Error(response.error)})
-      }
-      return response.json().then(response => {setResponse({ valid : true, error : "", data : response.data})})
-  })
-  .catch(error => {
-      console.error(error);      
-  });
+export const logInRequest = ( data ) => {
+
+    const headers = {
+        'username' : data.username,
+        'password' : data.password
+    }
+
+    const request = buildRequest( 'GET', headers )
+
+    return useFetch( request, "http://localhost:3000/users/token" )
 }
 
-export const useGetAuthorized = ( setToken, setTokenLoaded, setUsername, setEmail, url, token ) => {
-  fetch(url, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`,
-    },
-})
-.then(response => {
-    if (!response.ok) {
-        return response.json().then(
-            response => {
-                setTokenLoaded(true); 
-                setUsername(null)
-                setToken(null); 
-                setEmail(null);
+export const tokenRequest = ( storedToken ) => {
+    
+    const headers = {
+        'Authorization' : `Bearer ${storedToken}`
+    }
 
-                throw new Error(response.error)}
-        )
+    const request = buildRequest( 'GET', headers )
+
+    return useFetch( request, "http://localhost:3000/users/validate" )
+}
+
+export const editUser = ( token, field, value, id ) => {
+    
+    const headers = {
+        'Authorization' : `Bearer ${ token }`,
+        'Content-Type' : 'application/json' 
     }
-    else {
-        return response.json().then(
-            response => {
-                setUsername(response.data.username)
-                setEmail(response.data.email);
-                setTokenLoaded(true);
-                setToken(token); 
-                 
-                console.log(response.data)
-            }
-        )
+
+    const data = {
+        'field' : field,
+        'value' : value,
+        'id' : id
     }
-})
-.catch(error => {
-    console.error(error);      
-});
+
+    const request = buildRequestBody( 'POST', headers, data )
+
+    return useFetch( request, "http://localhost:3000/users/edit" )
+}
+
+export const editSelf = ( token, field, value ) => {
+    
+    const headers = {
+        'Authorization' : `Bearer ${ token }`,
+        'Content-Type' : 'application/json' 
+    }
+
+    const data = {
+        'field' : field,
+        'value' : value,
+    }
+
+    const request = buildRequestBody( 'POST', headers, data )
+
+    return useFetch( request, "http://localhost:3000/users/self" )
+}
+
+export const userListRequest = ( token ) => {
+
+    const headers = {
+        'Authorization' : `Bearer ${ token }`
+    }
+    
+    const request = buildRequest( 'GET', headers )
+
+     return useFetch( request, "http://localhost:3000/users/employee" )
+}
+
+export const createUser = ( token, data ) => {
+
+    const headers = {
+        'Authorization' : `Bearer ${ token }`,
+        'Content-Type' : 'application/json' 
+    }
+
+    const request = buildRequestBody( 'POST', headers, data )
+
+    return useFetch( request, "http://localhost:3000/users/admin" )
 }

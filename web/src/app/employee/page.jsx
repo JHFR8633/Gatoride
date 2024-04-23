@@ -1,9 +1,9 @@
 import React from "react";
 
 import GatorideNavbar from "@/components/common/navbar";
-import { CarDisplay } from "@/components/cars/rental_display";
+import { CarDisplay } from "@/components/cars/employee_display";
 
-export default function Cars() {
+export default function Employee() {
   return (
     <div>
         <header >
@@ -17,4 +17,3 @@ export default function Cars() {
     </div>
     );
 }
-

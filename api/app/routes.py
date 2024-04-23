@@ -1,3 +1,4 @@
+"""
 from flask import jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from .models import User, Car
@@ -7,58 +8,6 @@ from flask_jwt_extended import JWTManager, create_access_token, jwt_required, ge
 
 
 def configure_routes(app):
-    @app.route('/members')
-    def run():
-        emails = [user.email for user in User.query.all()]
-        return jsonify({"members": emails})
-
-    @app.route('/addUser', methods=['POST'])
-    def add_user():
-        if request.is_json:
-            data = request.json
-
-            try:
-                new_user = {}
-                new_user['email'] = data["email"]
-                new_user['username'] = data["username"]
-                new_user['password'] = generate_password_hash(data["password"])
-                # creates a client account by default
-                new_user['role'] = "client"
-
-                email_exists = User.query.filter_by(
-                    email=new_user["email"]).first() is not None
-                user_exists = User.query.filter_by(
-                    username=new_user["username"]).first() is not None
-
-                if (email_exists):
-                    return jsonify({"valid": False, "error": "This email is already registered"}), 400
-
-                elif (user_exists):
-                    return jsonify({"valid": False, "error": "This username is already taken"}), 400
-
-                else:
-                    add_data(new_user)
-                    return jsonify({"valid": True, "error": "", "data": data}), 200
-
-            except:
-                return jsonify({"valid": False, "error": "Some data is missing", "data": data}), 400
-
-        return jsonify({"valid": False, "error": "Request must contain JSON data"}), 400
-
-    # input json should be name, username and password
-    @app.route('/login', methods=['POST'])
-    def login():
-
-        username = request.json.get('username', None)
-        password = request.json.get('password', None)
-        user = User.query.filter_by(username=username).first()
-
-        if user and check_password_hash(user.password, password):
-            access_token = create_access_token(identity=username)
-            return jsonify({"data": {"token": access_token}}), 200
-
-        return jsonify({"error": "Invalid login credentials"}), 401
-
     @app.route('/getcars', methods=['GET'])
     def get_cars():
         cars = Car.query.all()
@@ -126,7 +75,7 @@ def configure_routes(app):
             db.session.rollback()
             return jsonify({'error': str(e)}), 400
 
-    return jsonify({'message': 'Invalid request method'}), 405
+        return jsonify({'message': 'Invalid request method'}), 405
 
     @app.route('/deleteCar', methods=['POST'])
     def delete_for_car():
@@ -139,3 +88,17 @@ def configure_routes(app):
         except Exception as e:
             db.session.rollback()
             return jsonify({'error': str(e)}), 400
+        
+    @app.route('/login', methods=['POST'])
+    def login():
+
+        username = request.json.get('username', None)
+        password = request.json.get('password', None)
+        user = User.query.filter_by(username=username).first()
+
+        if user and check_password_hash(user.password, password):
+            access_token = create_access_token(identity=username)
+            return jsonify({"data": {"token": access_token}}), 200
+
+        return jsonify({"error": "Invalid login credentials"}), 401
+"""

@@ -1,27 +1,53 @@
 "use client"
 
 import React from "react";
-import {Card, CardBody, CardHeader, Input, Spacer, Button } from "@nextui-org/react";
+import {Card, CardBody, CardHeader, CardFooter, Input, Spacer, Button, Link } from "@nextui-org/react";
 import { useState, createContext, useContext } from "react";
+import { dateRequest } from "../../hooks/cars";
 
 
 const DateContext = createContext();
 
 export const DatePicker = () => {
-    const [ date, setDate ] = useState({ start : '', end : '' });
+    const [ dates, setDates ] = useState({ start : null, end : null });
 
     return (
-        <Card className="w-full max-w-lg flex flex-shrink items-center" style={{flexShrink:0}}>
+        <Card className="w-full max-w-lg flex flex-shrink items-center" style={{ flexShrink:0 }}>
             <CardHeader className="max-w-lg justify-center pb-1">
-                <Button color="secondary" onPress={()=>{console.log( date )}} className="min-w-full">
+                <Button color="secondary" as={ Link } className="min-w-full" href={`/cars?start=${dates.start}&end=${dates.end}`}>
                     Find Your Car Now!
                 </Button>
             </CardHeader>
             <CardBody className="max-w-lg pb-4">
-                <DateContext.Provider value={[ date, setDate ]}>
+                <DateContext.Provider value={[ dates, setDates ]}>
                     <DateInput/>
                 </DateContext.Provider>
             </CardBody>
+        </Card>
+    )
+}
+
+export const DatePickerCars = ({ setData, syncDates, start = null, end = null }) => {
+    const [ dates, setDates ] = useState({ start : start, end : end });
+
+    const handleDate = () => {
+           dateRequest( dates )
+           .then( data => { setData( data ); syncDates(dates) })
+           .catch( error => console.error( error ))
+    }
+
+    return (
+        <Card className="w-full max-w-lg flex flex-shrink items-center" style={{flexShrink:0}}>
+            <CardBody className="max-w-lg pb-1">
+                <DateContext.Provider value={[ dates, setDates ]}>
+                    <DateInput/>
+                </DateContext.Provider>
+            </CardBody>
+            <CardFooter className="max-w-lg justify-center pb-4">
+                <Button color="secondary" onPress={handleDate} className="min-w-full">
+                    Find Available Cars
+                </Button>
+            </CardFooter>
         </Card>
     )
 }
@@ -37,13 +63,15 @@ const DateInput = () => {
         )
     };
 
+    const start = date["start"] ? date["start"] : ''
+    const end = date["end"] ? date["end"] : ''
 
     return (
         <div className="flex flex-row">
             <Input
                 type="date"
                 label="Start Date"
-                value={date["start"]}
+                value={ start }
                 className="max-w-xs flex"
                 onChange={handleDate("start")}
             />
@@ -51,7 +79,7 @@ const DateInput = () => {
             <Input
                 type="date"
                 label="End Date"
-                value={date["end"]}
+                value={ end }
                 className="max-w-xs flex"
                 onChange={handleDate("end")}
             />

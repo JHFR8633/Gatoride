@@ -10,7 +10,7 @@ export default function Cars() {
             <GatorideNavbar/>
         </header> 
         <main>
-            <div className="flex flex-col justify-center items-center" style={{backgroundImage:"url(images/background.jpg)", width:"100%", height:"100%", position:"fixed", bottom:0}}>
+            <div className="flex flex-col justify-center items-center bg-gradient-to-b from-orange-100 to-orange-400">
               <CarDisplay/>
             </div>
         </main>

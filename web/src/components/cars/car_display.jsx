@@ -1,43 +1,136 @@
 "use client"
 
-import React, { useState, useEffect } from "react";
-import {Card, CardBody, CardFooter, Image, Spinner} from "@nextui-org/react";
+import React, { useState, useEffect, useContext } from "react";
+import {Card, CardBody, CardFooter, Image, Spinner, Spacer, Modal, ModalContent, ModalHeader, ModalFooter, useDisclosure, Button } from "@nextui-org/react";
+import { DatePickerCars } from "../common/date_picker";
+import { dateRequest } from "../../hooks/cars";
+import { useSearchParams } from 'next/navigation'
+import { TokenContext } from "../auth_modal/modal";
+import { reservationRequest } from "../../hooks/reservations";
 
 export const CarDisplay = () => {
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const token = useContext( TokenContext ).token
+  const query  = useSearchParams()
 
-  const [data, setData] = useState(null);
+  const [ empty, setEmpty ] = useState(false)
+  const [ dates, setDates ] = useState(null)
+  const [ error, setError ] = useState(null)
+  const [ data, setData ] = useState(null)
+  const [ car, setCar ] = useState(null)
+
+  const pullCars = () => {
+    dateRequest( dates )
+    .then( data => {
+      if ( data ) setData( data )
+      setEmpty( true )
+    } )
+    .catch( () => {
+      setEmpty( true )
+      setData( null )
+    } );
+  }
 
   useEffect(() => {
-    fetch('http://localhost:3000/getcars')
-      .then(response => response.json())
-      .then(data => setData(data))
-      .catch(error => console.error('Error:', error));
+      if ( query ) setDates({ start : query.start, end : query.end })
+      else return 
+      pullCars()
   }, []);
 
+  const handleClick = ( close ) => {
+    reservationRequest( dates, car, token )
+    .then( data => { pullCars(); close() })
+    .catch( error => setError(error));
+  }
+
+  const openModal = ( car ) => {
+    setError( null )
+    setCar( car )
+    onOpen()
+  }
+
   return (
-    <div className="flex flex-row flex-wrap gap-6 max-w-5xl">
-      { data === null ?
-      <Spinner size="lg" />
-      :
-      data.map((item, index) => (
-        <Card shadow="sm" key={index} isPressable onPress={() => console.log("item pressed")}>
-          <CardBody className="overflow-visible p-0">
-            <Image
+    <>
+      <Spacer y={14}></Spacer>
+      <DatePickerCars setData={setData} syncDates={ setDates }/>
+      <Spacer y={6}></Spacer>
+      <div className="grid grid-cols-7 gap-3 m-10">
+        { empty ?
+        <>
+          { data === null ?
+            <>
+              <Spacer y={200} className="col-span-7"></Spacer>
+            <h1 className="col-span-7" style={{"color" : "#000000"}}>No Cars</h1>
+            </>
+            :
+            data.map( ( item, index ) => (
+              <CarCard item = { item } index = { index } handleClick = { openModal }/>
+            ))
+          }
+        </>
+        :
+        <>
+          <Spacer y={200} className="col-span-7"></Spacer>
+          <Spinner className="col-span-7" size="lg" />
+        </> 
+        }
+        <Spacer y={800} className="col-span-7"></Spacer>
+      </div>
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+        <PaymentModal token = { token } handleClick={ handleClick } error={error}/>
+      </Modal>
+    </>
+    
+  );
+}
+
+const CarCard = ({ item, handleClick }) => {
+  return (
+    <Card className="w-60 h-70" shadow="sm" key={ item.make } isPressable onPress={ () => { handleClick( item.id ) }}>
+        <CardBody>
+          <Image
               shadow="sm"
               radius="lg"
               width="100%"
-              alt={item.id}
-              className="w-full object-cover h-[500px]"
-              src={`http://localhost:4000/${index+1}`}
+              alt={ item.id }
+              className="w-full object-cover h-[200px]"
+              src={`http://localhost:4000/1`}
             />
-          </CardBody>
-          <CardFooter className="text-small justify-between">
-            <b>{item.make}</b>
-            <p className="text-default-500">{item.model}</p>
-          </CardFooter>
-        </Card>
-      ))
-      }
-    </div>
-  );
+        </CardBody>
+        <CardFooter className="grid grid-cols-2 text-small justify-start">
+          <b> Type { item.type } </b>
+          <p> Model { item.model } </p>
+          <b> Make { item.make } </b>
+          <p> Location { item.location } </p>
+          <b> Per Day { item.day } </b>
+          <p> Per Mile { item.mile } </p>
+          <b> Mileage { item.mileage } </b>
+          <p> ID { item.id } </p>
+        </CardFooter>
+    </Card>
+  )
+}
+
+const PaymentModal = ({ token, handleClick, error }) => {
+  return (
+    <ModalContent>
+      { ( onClose ) => (
+        <>
+          { token ? 
+          <>
+            <ModalHeader>Pay Here</ModalHeader>
+            <ModalFooter>
+              <h1> {error} </h1>
+              <Button color="primary" onPress={ () => { handleClick(onClose) }} > 
+                Confirm
+              </Button>
+            </ModalFooter>
+          </>
+          : 
+          <ModalHeader>Please Log In</ModalHeader>
+          }
+        </>
+      ) }
+    </ModalContent>
+  )
 }
