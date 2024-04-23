@@ -52,23 +52,11 @@ export const CarDisplay = () => {
 const CarCard = ({ item }) => {
     return (
       <Card className="w-60 h-70" shadow="sm" key={ item.username } isPressable >
-          <CardBody>
-            <Image
-                shadow="sm"
-                radius="lg"
-                width="100%"
-                alt={ item.id }
-                className="w-full object-cover h-[200px]"
-                src={`http://localhost:4000/1`}
-              />
-          </CardBody>
           <CardFooter className="grid grid-cols-2 text-small justify-start">
-            <b> Username { item.username } </b>
-            <p> Email { item.email } </p>
-            <b> Role { item.role } </b>
-            <p> ID { item.id } </p>
-            <b> Location </b>
-            <p> { item.location } </p>
+          <p> Reservation ID = { item.id } </p>
+          <p> Car ID = { item.car_id } </p>
+          <p> Start = { item.start } </p>
+          <p> End = { item.end } </p>
           </CardFooter>
       </Card>
     )
