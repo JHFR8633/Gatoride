@@ -169,6 +169,8 @@ class Car(db.Model):
                 self.day = value
             case "mile" : 
                 self.mile = value
+            case "status" : 
+                self.status = value
             case _:
                 raise Exception("Invalid Field", 400)
             

@@ -172,7 +172,7 @@ const EditModal = ({ token, data }) => {
     }
     else {
       setFields([
-        "location", "make", "model", "type", "mileage", "day", "mile"
+        "location", "make", "model", "type", "mileage", "day", "mile", "status"
       ])
     }
 
