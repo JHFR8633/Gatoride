@@ -4,6 +4,8 @@ import { CarCard } from "./car_card";
 import { sport, SUV, economy, eletric } from "./car_images";
 import {Spacer} from "@nextui-org/react";
 
+
+// the example cars in the homepage
 export const ExampleCars = () => {
     return (
         <div className="flex justify-start">

@@ -1,7 +1,7 @@
 import React from "react";
 import {Card, CardHeader, CardBody } from "@nextui-org/react";
 
-
+// The title in the homepage
 export const TitleCard = () => {
   return (
     <Card className="px-4 py-2 w-full max-w-5xl" isBlurred>

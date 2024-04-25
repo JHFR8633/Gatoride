@@ -14,6 +14,7 @@ const handleJson = ( data, set, key ) => {
     )
 };
 
+// Modal for sign up and login
 export const AuthModal = ({ login }) => {
     const [ userData, setUserData ] = useState({ email : "", password : "", username : "" })
     const { isOpen, onOpen, onOpenChange } = useDisclosure()

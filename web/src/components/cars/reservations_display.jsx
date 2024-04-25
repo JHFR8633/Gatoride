@@ -5,7 +5,7 @@ import {Card, CardBody, CardFooter, Image, Spinner, Spacer } from "@nextui-org/r
 import { reservationListRequest } from "../../hooks/reservations";
 import { TokenContext } from "../auth_modal/modal";
 
-
+// show all reservations
 export const CarDisplay = () => {
   const token = useContext( TokenContext ).token
 

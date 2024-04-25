@@ -8,6 +8,11 @@ import { dateRequest } from "../../hooks/cars";
 
 const DateContext = createContext();
 
+
+// Components for choosing the date
+
+
+// Home Page
 export const DatePicker = () => {
     const [ dates, setDates ] = useState({ start : null, end : null });
 
@@ -27,6 +32,7 @@ export const DatePicker = () => {
     )
 }
 
+// Cars Page
 export const DatePickerCars = ({ setData, syncDates, start = null, end = null }) => {
     const [ dates, setDates ] = useState({ start : start, end : end });
 

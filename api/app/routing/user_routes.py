@@ -5,6 +5,8 @@ from flask_jwt_extended import jwt_required #type: ignore
 
 
 def configure_user_routes(app):
+
+    # route to create user
     @app.route('/users/create', methods = ['POST'])
     def create_user():
         if not request.is_json:
@@ -20,7 +22,7 @@ def configure_user_routes(app):
         except Exception as err:
             return jsonify( err.args[0] ), 400
         
-        
+    # route to create user as employee or admin
     @app.route('/users/admin', methods = ['POST'])
     @jwt_required()
     def create_user_admin():
@@ -43,7 +45,7 @@ def configure_user_routes(app):
         except Exception as err:
             return jsonify( err.args[0] ), 400
         
-        
+    # route to get token
     @app.route('/users/token', methods = ['GET'])
     def retrieve_token():
         try :
@@ -59,7 +61,7 @@ def configure_user_routes(app):
         except Exception as err:
             return jsonify( err.args[0] ), 400 
         
-        
+    # route to validate token
     @app.route('/users/validate', methods = ['GET'])
     @jwt_required()
     def check_token():
@@ -71,6 +73,7 @@ def configure_user_routes(app):
             return jsonify( err.args[0] ), 400 
         
 
+    # route to edit users
     @app.route('/users/edit', methods = ['POST'])
     @jwt_required()
     def edit_user():
@@ -95,6 +98,8 @@ def configure_user_routes(app):
         except Exception as err:
             return jsonify( err.args[0] ), 400
         
+
+    # route to edit yourself
     @app.route('/users/self', methods = ['POST'])
     @jwt_required()
     def edit_self():
@@ -118,6 +123,7 @@ def configure_user_routes(app):
             return jsonify( err.args[0] ), 400
         
 
+    # route to view your reservations
     @app.route('/users/reservations', methods = ['GET'])
     @jwt_required()
     def get_user_reservations():
@@ -138,7 +144,8 @@ def configure_user_routes(app):
         except Exception as err:
             return jsonify( err.args[0] ), 400 
 
-        
+    
+    # route to view all users
     @app.route('/users/employee', methods = ['GET'])
     @jwt_required()
     def get_users():

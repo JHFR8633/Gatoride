@@ -32,7 +32,7 @@ def configure_database( app ):
     db.create_all()
     testing_data_cars()
     create_admin_account()
-    create_employee_accounts( 25 )
+    create_employee_accounts()
 
 
 def configure_routes( app ):

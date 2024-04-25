@@ -1,5 +1,6 @@
 import { buildRequest, buildRequestBody, useFetch } from "./request"
 
+// create reservation as user
 export const reservationRequest = ( dates, car, token ) => {
     const headers = {
         'Authorization' : `Bearer ${ token }`,
@@ -17,6 +18,7 @@ export const reservationRequest = ( dates, car, token ) => {
     return useFetch( request, "http://localhost:3000/reservations/create" )
 }
 
+// create reservation for user
 export const createReservation = ( token, data ) => {
 
     const headers = {
@@ -29,6 +31,7 @@ export const createReservation = ( token, data ) => {
     return useFetch( request, "http://localhost:3000/reservations/admin" )
 }
 
+// get your own reservations
 export const reservationRequestUser = ( token ) => {
 
     const headers = {
@@ -40,6 +43,7 @@ export const reservationRequestUser = ( token ) => {
     return useFetch( request, "http://localhost:3000/users/reservations" )
 }
 
+// get all reservations
 export const reservationListRequest = ( token ) => {
 
     const headers = {

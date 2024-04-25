@@ -3,6 +3,7 @@ from flask_bcrypt import check_password_hash #type: ignore
 from .models import User, find_by_id, build_instance, create_instance, check_duplicate_user, db
 import random
 
+# find a user by the username
 def find_user_by_username( username ) -> User :
     match = User.query.filter_by( username = username ).first()
     
@@ -11,6 +12,7 @@ def find_user_by_username( username ) -> User :
     
     return match
 
+# check if user password is correct
 def check_password( username, password ) :
     try :
         user = find_user_by_username( username )
@@ -23,12 +25,14 @@ def check_password( username, password ) :
     except:
         raise Exception("Password or Username invalid", 400)
 
+# create a token for the user
 def create_token( user ) :
     try :
         return create_access_token( identity = user.id ) 
     except Exception as err :
         raise err
     
+# validate the token as a user
 def validate_token() :
     try : 
         id = get_jwt_identity()
@@ -38,6 +42,7 @@ def validate_token() :
     except Exception as err :
         raise err
     
+# create admin account
 def create_admin_account() : 
     try :
         data = {
@@ -53,10 +58,11 @@ def create_admin_account() :
 
     except :
         raise Exception("Failed to create Admin", 400)
-    
-def create_employee_accounts( ammount ) :
+
+# create employee accounts  
+def create_employee_accounts() :
     try :
-        for i in range(1, ammount + 1) :
+        for i in range(1, 101 ) :
             data = {
                 'username': f'E{i}', 
                 'password': f'E{i}', 

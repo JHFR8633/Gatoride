@@ -5,7 +5,7 @@ import {Card, CardBody, CardFooter, Image, Spinner, Spacer } from "@nextui-org/r
 import { userListRequest } from "../../hooks/auth";
 import { TokenContext } from "../auth_modal/modal";
 
-
+// Show all users
 export const CarDisplay = () => {
   const token = useContext( TokenContext ).token
 

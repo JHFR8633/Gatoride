@@ -1,7 +1,7 @@
 import React from "react";
 import {Card, CardHeader, CardBody, Image, Divider } from "@nextui-org/react";
 
-
+// displays car information as a card
 export const CarCard = ({ img="", type="SUV", children }) => {
   return (
     <Card className="py-4 m-4 p-4 flex-shrink-0">

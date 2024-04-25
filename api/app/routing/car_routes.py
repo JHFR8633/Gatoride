@@ -4,7 +4,10 @@ from app.models.user_methods import validate_token
 from flask_jwt_extended import jwt_required #type: ignore
 
 
+
 def configure_car_routes( app ):
+
+    #Route to view all cars
     @app.route('/cars/admin', methods=['GET'])
     @jwt_required()
     def get_cars():
@@ -22,6 +25,7 @@ def configure_car_routes( app ):
         except Exception as err :
             return jsonify( err.args[0] ), 400 
         
+    #route to view all cars in location
     @app.route('/cars/employee', methods=['GET'])
     @jwt_required()
     def get_local_cars():
@@ -42,16 +46,9 @@ def configure_car_routes( app ):
 
         except Exception as err:
             return jsonify( err.args[0] ), 400 
-        
-    def get_cars():
-        try : 
-            cars = [car.data() for car in Car.query.all()]
-            return jsonify( cars ), 200
-
-        except Exception as err :
-            return jsonify( err.args[0] ), 400 
-        
     
+        
+    #route to get all reservations of a car
     @app.route('/cars/reservations', methods=['GET'])
     def get_car_reservations():
         try :
@@ -63,7 +60,8 @@ def configure_car_routes( app ):
         except Exception as err:
             return jsonify( err.args[0] ), 400
         
-        
+    
+    # route to check if car is available
     @app.route('/cars/availability', methods=['GET'])
     def get_car_availability():
         try :
@@ -82,6 +80,7 @@ def configure_car_routes( app ):
         except Exception as err:
             return jsonify( err.args[0] ), 400 
         
+    # route to get all available cars
     @app.route('/cars/available', methods=['GET'])
     def get_available_cars():
         try :
@@ -100,6 +99,7 @@ def configure_car_routes( app ):
             return jsonify( err.args[0] ), 400 
 
 
+    # route to create a car
     @app.route('/cars/create', methods = ['POST'])
     @jwt_required()
     def create_car():
@@ -121,6 +121,7 @@ def configure_car_routes( app ):
             return jsonify( err.args[0] ), 400
         
     
+    # route to delete a car
     @app.route('/cars/delete', methods = ['POST'])
     @jwt_required()
     def delete_car():
@@ -145,6 +146,7 @@ def configure_car_routes( app ):
             return jsonify( err.args[0] ), 400
         
 
+    # route to edit a car
     @app.route('/cars/edit', methods = ['POST'])
     @jwt_required()
     def edit_car():

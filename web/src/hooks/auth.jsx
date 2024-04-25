@@ -1,6 +1,7 @@
 
 import { buildRequest, buildRequestBody, useFetch } from "./request"
 
+// create account
 export const singUpRequest = ( data ) => {
 
     const headers = { 
@@ -12,6 +13,7 @@ export const singUpRequest = ( data ) => {
     return useFetch( request, "http://localhost:3000/users/create" )
 }
 
+// get token
 export const logInRequest = ( data ) => {
 
     const headers = {
@@ -24,6 +26,7 @@ export const logInRequest = ( data ) => {
     return useFetch( request, "http://localhost:3000/users/token" )
 }
 
+// validate token
 export const tokenRequest = ( storedToken ) => {
     
     const headers = {
@@ -35,6 +38,7 @@ export const tokenRequest = ( storedToken ) => {
     return useFetch( request, "http://localhost:3000/users/validate" )
 }
 
+// edit user info
 export const editUser = ( token, field, value, id ) => {
     
     const headers = {
@@ -53,6 +57,7 @@ export const editUser = ( token, field, value, id ) => {
     return useFetch( request, "http://localhost:3000/users/edit" )
 }
 
+// edit own info
 export const editSelf = ( token, field, value ) => {
     
     const headers = {
@@ -70,6 +75,7 @@ export const editSelf = ( token, field, value ) => {
     return useFetch( request, "http://localhost:3000/users/self" )
 }
 
+// get  all users
 export const userListRequest = ( token ) => {
 
     const headers = {
@@ -81,6 +87,7 @@ export const userListRequest = ( token ) => {
      return useFetch( request, "http://localhost:3000/users/employee" )
 }
 
+// create account for user
 export const createUser = ( token, data ) => {
 
     const headers = {

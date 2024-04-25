@@ -8,6 +8,7 @@ import { useSearchParams } from 'next/navigation'
 import { TokenContext } from "../auth_modal/modal";
 import { reservationRequest } from "../../hooks/reservations";
 
+// show available cars with date picker
 export const CarDisplay = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const token = useContext( TokenContext ).token

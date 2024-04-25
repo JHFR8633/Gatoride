@@ -8,6 +8,10 @@ import { editUser, createUser, editSelf } from "../../hooks/auth";
 import { createCar, deleteCar, editCar } from "../../hooks/cars";
 import { createReservation } from "../../hooks/reservations";
 
+
+// The nav bar shown in all pages
+
+
 export default function GatorideNavbar() {
   const tokenLoaded = useContext(TokenContext).tokenLoaded
   
@@ -103,7 +107,7 @@ const DropData = ({ data, token, handleAction }) => {
   )
 }
 
-
+// for logged users
 const LoggedModal = () => {
   const token = useContext(TokenContext).token
   const setToken = useContext( TokenContext ).setToken
@@ -149,7 +153,7 @@ const handleJson = ( data, set, key ) => {
 };
 
 
-
+// for editing entries
 const EditModal = ({ token, data }) => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [ message, setMessage ] = useState(null)
@@ -272,6 +276,7 @@ const EditModal = ({ token, data }) => {
   )
 }
 
+// for creating cars
 const CarModal = ({ token, data }) => {
   const [ carData, setCarData ] = useState({ location : '', make : '', model : '', type : '', mileage : '', day : ''})
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -319,6 +324,7 @@ const CarModal = ({ token, data }) => {
   )
 }
 
+// for creating accounts
 const CreateModal = ({ token, data }) => {
   const [ userData, setUserData ] = useState({ email : "", password : "", username : "" })
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -367,6 +373,7 @@ const CreateModal = ({ token, data }) => {
   )
 }
 
+// for deleting cars
 const DeleteModal = ({ token }) => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [ userData, setUserData ] = useState({ id : "" })
@@ -408,6 +415,7 @@ const DeleteModal = ({ token }) => {
   )
 }
 
+// for creating reservations
 const ReservationModal = ({ token, data }) => {
   const [ userData, setUserData ] = useState({ car_id : "", user_id : "", start : "", end : "" })
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -481,6 +489,7 @@ const ReservationModal = ({ token, data }) => {
   )
 }
 
+// for editing own info
 const SelfModal = ({ token }) => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [ message, setMessage ] = useState(null)

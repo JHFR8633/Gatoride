@@ -5,6 +5,8 @@ from app.models.user_methods import validate_token
 
 
 def configure_reservation_routes( app ):
+
+    # route to create reservation
     @app.route('/reservations/create', methods=['POST'])
     @jwt_required()
     def create_reservation():
@@ -24,6 +26,7 @@ def configure_reservation_routes( app ):
             return jsonify( err.args[0] ), 400
         
     
+    # route to view all reservations
     @app.route('/reservations/employee', methods = ['GET'])
     @jwt_required()
     def get_reservations():
@@ -42,6 +45,7 @@ def configure_reservation_routes( app ):
             return jsonify( err.args[0] ), 400 
         
     
+    # route to create reservation for customer
     @app.route('/reservations/admin', methods=['POST'])
     @jwt_required()
     def create_reservation_admin():

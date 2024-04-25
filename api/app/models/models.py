@@ -4,6 +4,7 @@ from datetime import datetime
 
 db = SQLAlchemy()
 
+# turn date into readable format
 def build_date( start_full, end_full ):
     start = ''.join(start_full.split('-'))
     end = ''.join(end_full.split('-'))
@@ -226,6 +227,7 @@ class User( db.Model ):
             raise Exception("Failed to create " + self.__name__+ ", Some data is missing", 400)
 
 
+# add reservation to car or user
 def add_reservation( object, id ):
     try : 
         if object.reservations is None : object.reservations = id
@@ -233,6 +235,7 @@ def add_reservation( object, id ):
     except : 
         raise Exception( object.reservations, 400)
     
+# find object by id
 def find_by_id( type , id ):
     match = type.query.filter_by( id = id ).first()
     
@@ -240,10 +243,12 @@ def find_by_id( type , id ):
         raise Exception( type.__name__ + " not found", 400)
     
     return match
-         
+
+# default function         
 def no_check( data ):
     return
 
+# create instance in database
 def create_instance( type, data, check_duplicate = no_check):
     try : 
         instance = build_instance( type, data, check_duplicate )
@@ -254,6 +259,7 @@ def create_instance( type, data, check_duplicate = no_check):
     except Exception as err :
         raise err
     
+# build instance of object
 def build_instance( type, data, check_duplicate = no_check ):
     try : 
         instance = type( data )
@@ -265,7 +271,7 @@ def build_instance( type, data, check_duplicate = no_check ):
     except Exception as err :
         raise err
     
-
+# check if a duplicate user
 def check_duplicate_user( user : User ):
     check_duplicate_username( user.username )
     check_duplicate_email( user.email )
